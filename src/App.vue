@@ -8,7 +8,7 @@ export default {
     TheFooter
   },
   data: () => ({
-    tagline: 123
+    tagline: "Track whatever you want to eat"
   })
 }
 </script>
