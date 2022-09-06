@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid'
 import { onMounted, ref } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
 import { restaurantStatusList } from '@/constants'
 import type { Restaurant } from '@/types'
 
-const emits = defineEmits<{
+const emit = defineEmits<{
   (e: 'add-new-restaurant', restaurant: Restaurant): void
   (e: 'cancel-new-restaurant'): void
 }>()
-
 const elNameInput = ref<HTMLInputElement | null>(null)
-
 const newRestaurant = ref<Restaurant>({
   id: uuidv4(),
   name: '',
@@ -18,21 +16,15 @@ const newRestaurant = ref<Restaurant>({
   website: '',
   status: 'Want to Try',
 })
-
 const addRestaurant = () => {
-  emits('add-new-restaurant', newRestaurant.value)
+  emit('add-new-restaurant', newRestaurant.value)
 }
-
-const cancelRestaurant = () => {
-  emits('cancel-new-restaurant')
+const cancelNewRestaurant = () => {
+  emit('cancel-new-restaurant')
 }
-
-const updateName = (event: InputEvent) => {
-  if (event.data === ' ') {
-    newRestaurant.value.name = (event.target as HTMLInputElement).value
-  }
+const updateName = (event: KeyboardEvent) => {
+  newRestaurant.value.name = (event.target as HTMLInputElement).value
 }
-
 onMounted(() => {
   elNameInput.value?.focus()
 })
@@ -42,11 +34,11 @@ onMounted(() => {
   <form @submit.prevent>
     <div class="field">
       <div class="field">
-        <label for="name" class="label">Name</label>
+        <label for="name" class="label">Name: {{ newRestaurant.name }}</label>
         <div class="control">
           <input
             :value="newRestaurant.name"
-            @input="updateName"
+            @keyup.space="updateName"
             type="text"
             class="input is-large"
             placeholder="Beignet and the Jets"
@@ -85,7 +77,7 @@ onMounted(() => {
           <button @click="addRestaurant" class="button is-success">
             Create
           </button>
-          <button @click="cancelRestaurant" class="button is-light">
+          <button @click="cancelNewRestaurant" class="button is-light">
             Cancel
           </button>
         </div>
